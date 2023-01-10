@@ -6,7 +6,7 @@ const localCache = localforage.createInstance({
   name: 'filecache',
 });
 
-export const fetchPlugin = (input: string) => {
+export const moduleRequestPlugin = (input: string) => {
   return {
     name: 'fetch-plugin',
     setup(build: esbuild.PluginBuild) {

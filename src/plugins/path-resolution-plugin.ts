@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild-wasm';
 
-export const unpkgPathPlugin = () => {
+export const pathResolvePlugin = () => {
   return {
     name: 'unpkg-path-plugin',
     setup(build: esbuild.PluginBuild) {

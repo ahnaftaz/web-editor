@@ -1,11 +1,13 @@
 import * as esbuild from 'esbuild-wasm';
-import { useState, useEffect, useRef } from "react";
-import ReactDOM from "react-dom";
-import { unpkgPathPlugin } from './plugins/unpkg-plugin';
-import { fetchPlugin } from './plugins/fetch-plugin';
+import { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
+import { pathResolvePlugin } from './plugins/path-resolution-plugin';
+import { moduleRequestPlugin } from './plugins/module-request-plugin';
+import MonacoEditor, { OnChange } from '@monaco-editor/react';
+import baseHTML from './components/base-output';
 
 const App = () => {
-  const iframe = useRef<any>();
+  const iframe = useRef<HTMLIFrameElement>(null);
   const [mainBuildService, setBuildService] = useState<esbuild.Service>();
   const [input, setInput] = useState('');
 
@@ -20,19 +22,26 @@ const App = () => {
     // of app to run directly on browser
     const service = await esbuild.startService({
       worker: true,
-      wasmURL: '/esbuild.wasm'
+      wasmURL: '/esbuild.wasm',
     });
     setBuildService(service);
   };
 
+  const handleEditorChange: OnChange = (value) => {
+    if (!value) {
+      return;
+    }
+    setInput(value);
+  };
+
   // Assigned to button to send a service req to esbuild
   const initiateTranspiling = async () => {
-    if (!mainBuildService) {
+    if (!mainBuildService || !iframe.current || !iframe.current.contentWindow) {
       return;
     }
 
     // reset the iframe window before each code run to remove any changes to page
-    iframe.current.srcdoc = html;
+    iframe.current.srcdoc = baseHTML;
 
     // begin building file to pull in any imported libraries
     // using the unpkg path plugin instead of the default
@@ -41,43 +50,33 @@ const App = () => {
       bundle: true,
       write: false,
       // plugin to handle path resolution and api request
-      plugins: [unpkgPathPlugin(), fetchPlugin(input)],
+      plugins: [pathResolvePlugin(), moduleRequestPlugin(input)],
       define: { 'process.env.NODE_ENV': '"production"' },
     });
 
-    // 
-    iframe.current.contentWindow.postMessage(result.outputFiles[0].text, "*");
+    // communicating all code through messages to maintain no relation between parent child
+    iframe.current.contentWindow.postMessage(result.outputFiles[0].text, '*');
   };
 
-  const html = `
-    <html>
-      <head></head>
-      <body>
-        <div id="root"></div>
-        <script>
-          window.addEventListener('message', (e) => {
-            try{
-              eval(e.data);
-            } catch (err) {
-              const root = document.querySelector('#root');
-              root.innerHTML = '<h2 style="color:orange">Runtime Error!</h2><div>' + err + '</div>';
-            }
-          }, false);
-        </script>
-      </body>
-    </html>
-  `;
-
   return (
-    <div>
-      <textarea value={input} onChange={(e) => setInput(e.target.value)}></textarea>
+    <div style={{display: "flex"}}>
+      <MonacoEditor
+        height='300px'
+        defaultLanguage='javascript'
+        defaultValue='/* Use "print()" to show items in the result widow */'
+        onChange={handleEditorChange}
+      />
       <div>
         <button onClick={initiateTranspiling}>Transpile!</button>
       </div>
-      <iframe ref={iframe} title='code-result' sandbox='allow-scripts' srcDoc={html} />
+      <iframe
+        ref={iframe}
+        title='code-result'
+        sandbox='allow-scripts'
+        srcDoc={baseHTML}
+      />
     </div>
-  )
+  );
 };
 
-
-ReactDOM.render(<App />, document.querySelector("#root"));
+ReactDOM.render(<App />, document.querySelector('#root'));
