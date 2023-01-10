@@ -2,7 +2,7 @@ import * as esbuild from 'esbuild-wasm';
 import axios from 'axios';
 import localforage from 'localforage';
 
-const filecCache = localforage.createInstance({
+const localCache = localforage.createInstance({
   name: 'filecache',
 });
 
@@ -19,7 +19,7 @@ export const fetchPlugin = (input: string) => {
 
       build.onLoad({ filter: /.*/ }, async (args: any) => {
         // Return item without request if already present in cache
-        const cachedResult = await filecCache.getItem<esbuild.OnLoadResult>(
+        const cachedResult = await localCache.getItem<esbuild.OnLoadResult>(
           args.path
         );
         if (cachedResult) {
@@ -36,17 +36,17 @@ export const fetchPlugin = (input: string) => {
           .replace(/"/g, '\\"')
           .replace(/'/g, "\\'");
         const contents = `
-            const style = document.createElement('style');
-            style.innerText = '${cleanedData}';
-            document.head.appendChild(style);
-            `;
+          const style = document.createElement('style');
+          style.innerText = '${cleanedData}';
+          document.head.appendChild(style);
+        `;
 
         const result: esbuild.OnLoadResult = {
           loader: 'jsx',
           contents,
           resolveDir: new URL('./', request.responseURL).pathname,
         };
-        await filecCache.setItem(args.path, result);
+        await localCache.setItem(args.path, result);
 
         return result;
       });
@@ -60,7 +60,7 @@ export const fetchPlugin = (input: string) => {
           contents: data,
           resolveDir: new URL('./', request.responseURL).pathname,
         };
-        await filecCache.setItem(args.path, result);
+        await localCache.setItem(args.path, result);
 
         return result;
       });
