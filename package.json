@@ -1,6 +1,7 @@
 {
   "name": "editor",
   "version": "0.1.0",
+  "homepage": "ahnaftazwar368.github.io/web-editor",
   "private": true,
   "dependencies": {
     "@monaco-editor/react": "^4.4.6",
@@ -48,6 +49,5 @@
   },
   "devDependencies": {
     "gh-pages": "^4.0.0"
-  },
-  "homepage": "ahnaftazwar368.github.io/web-editor"
+  }
 }
