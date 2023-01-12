@@ -4,12 +4,13 @@ import ReactDOM from 'react-dom';
 import { pathResolvePlugin } from './plugins/path-resolution-plugin';
 import { moduleRequestPlugin } from './plugins/module-request-plugin';
 import MonacoEditor, { OnChange, OnMount } from '@monaco-editor/react';
-import OutputWindow from './components/output-window';
+import baseHTML from './components/base-output';
 import 'bulmaswatch/cyborg/bulmaswatch.min.css';
 
 const App = () => {
+  const iframe = useRef<HTMLIFrameElement>(null);
+  // const highlighter = useRef<any>(null);
   const [mainBuildService, setBuildService] = useState<esbuild.Service>();
-  const [code, setCode] = useState('');
   const [input, setInput] = useState('');
 
   // Prepares app for processing transpile requests
@@ -40,9 +41,12 @@ const App = () => {
 
   // Assigned to button to send a service req to esbuild
   const initiateTranspiling = async () => {
-    if (!mainBuildService) {
+    if (!mainBuildService || !iframe.current || !iframe.current.contentWindow) {
       return;
     }
+
+    // reset the iframe window before each code run to remove any changes to page
+    iframe.current.srcdoc = baseHTML;
 
     // begin building file with all modules using custom plugins
     const result = await mainBuildService.build({
@@ -54,7 +58,8 @@ const App = () => {
       define: { 'process.env.NODE_ENV': '"production"' },
     });
 
-    setCode(result.outputFiles[0].text);
+    // communicating all code through messages to maintain no relation between parent child
+    iframe.current.contentWindow.postMessage(result.outputFiles[0].text, '*');
   };
 
   return (
@@ -82,7 +87,13 @@ const App = () => {
         </button>
       </div>
       <div className='column box'>
-        <OutputWindow transpiledCode={code} />
+        <iframe
+          width={'500px'}
+          ref={iframe}
+          title='code-result'
+          sandbox='allow-scripts'
+          srcDoc={baseHTML}
+        />
       </div>
     </div>
   );
