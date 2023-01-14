@@ -1,12 +1,11 @@
-// import * as esbuild from 'esbuild-wasm';
 import { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-// import { pathResolvePlugin } from './plugins/path-resolution-plugin';
-// import { moduleRequestPlugin } from './plugins/module-request-plugin';
-import MonacoEditor, { OnChange, OnMount } from '@monaco-editor/react';
+import { OnChange, OnMount } from '@monaco-editor/react';
 import baseHTML from './components/base-output';
-import 'bulmaswatch/cyborg/bulmaswatch.min.css';
+import 'bulmaswatch/darkly/bulmaswatch.min.css';
 import transpile from './transpiler';
+import Box from './components/Box';
+import Editor from './components/Editor';
 
 const App = () => {
   const iframe = useRef<HTMLIFrameElement>(null);
@@ -37,37 +36,38 @@ const App = () => {
   };
 
   return (
-    <div className='columns'>
-      <div className='column'>
-        <h1 className='title is-3'>Online Js editor</h1>
-        <MonacoEditor
-          theme='vs-dark'
-          height='300px'
-          defaultLanguage='javascript'
-          defaultValue='/* Use "print()" to show items in the result widow */'
-          options={{
-            wordWrap: 'on',
-            minimap: { enabled: false },
-            lineNumbersMinChars: 3,
-            folding: false,
-            fontSize: 16,
-            automaticLayout: true,
-          }}
-          onChange={handleEditorChange}
-          onMount={handleMount}
-        />
-        <button className='button is-primary' onClick={handleTranspileClick}>
-          Transpile!
-        </button>
+    <div style={{ display: 'flex', flexDirection: 'column', }}>
+      <div className='main-header'>
+        <h1 className='title is-3' style={{ margin: '10px' }}>
+          Online JS Editor
+        </h1>
       </div>
-      <div className='column box'>
-        <iframe
-          width={'500px'}
-          ref={iframe}
-          title='code-result'
-          sandbox='allow-scripts'
-          srcDoc={baseHTML}
-        />
+      <Box direction='s'>
+        <div className='main-content-area' style={{ height: '100%', display: 'flex' }}>
+          <div className='editor-area' style={{ height: "100%", width: 'calc(100% - 13px)', display: 'flex', flexDirection: 'column '}}>
+            {/* <Box direction='e'> */}
+              <div className='main-content-area' style={{ height: '100%', display: 'flex' }}>
+                <Editor onChange={handleEditorChange} onMount={handleMount} />
+              </div>
+            {/* </Box> */}
+          </div>
+          <div className='iframe-zone' style={{  width: '100%', height: '100%', }}>
+            {/* <Box direction='w'> */}
+              <iframe
+                style={{ backgroundColor: "white"}}
+                height='100%'
+                width='100%'
+                ref={iframe}
+                title='code-result' 
+                sandbox='allow-scripts'
+                srcDoc={baseHTML}
+              />
+            {/* </Box> */}
+          </div>
+        </div>
+      </Box>
+      <div style={{ display: 'relative' }}>
+        <button className='button is-primary' onClick={handleTranspileClick}>Run!</button>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild-wasm';
-import { pathResolvePlugin } from '../plugins/path-resolution-plugin';
-import { moduleRequestPlugin } from '../plugins/module-request-plugin';
+import { pathResolvePlugin } from './plugins/path-resolution-plugin';
+import { moduleRequestPlugin } from './plugins/module-request-plugin';
 
 let mainService: esbuild.Service;
 const transpile = async (input: string) => {
