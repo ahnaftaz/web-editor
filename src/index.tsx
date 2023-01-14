@@ -44,7 +44,7 @@ const App = () => {
       </div>
       <Box direction='s'>
         <div className='main-content-area' style={{ height: '100%', display: 'flex' }}>
-          <div className='editor-area' style={{ height: "100%", width: 'calc(100% - 13px)', display: 'flex', flexDirection: 'column '}}>
+          <div className='editor-area' style={{ height: "100%", width: 'calc(100% - 13px)', display: 'flex', flexDirection: 'column'}}>
             {/* <Box direction='e'> */}
               <div className='main-content-area' style={{ height: '100%', display: 'flex' }}>
                 <Editor onChange={handleEditorChange} onMount={handleMount} />
