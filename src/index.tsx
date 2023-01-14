@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { OnChange, OnMount } from '@monaco-editor/react';
 import baseHTML from './components/base-output';
 import 'bulmaswatch/darkly/bulmaswatch.min.css';
+import './styles/main-style.css';
 import transpile from './transpiler';
 import Box from './components/Box';
 import Editor from './components/Editor';
@@ -36,37 +37,31 @@ const App = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', }}>
+    <div className='main-container'>
       <div className='main-header'>
-        <h1 className='title is-3' style={{ margin: '10px' }}>
+        <h1 className='title is-3 main-title'>
           Online JS Editor
         </h1>
       </div>
       <Box direction='s'>
-        <div className='main-content-area' style={{ height: '100%', display: 'flex' }}>
-          <div className='editor-area' style={{ height: "100%", width: 'calc(100% - 13px)', display: 'flex', flexDirection: 'column'}}>
-            {/* <Box direction='e'> */}
-              <div className='main-content-area' style={{ height: '100%', display: 'flex' }}>
-                <Editor onChange={handleEditorChange} onMount={handleMount} />
-              </div>
-            {/* </Box> */}
+        <div className='main-content-area'>
+          <div className='editor-area'>
+            <Editor onChange={handleEditorChange} onMount={handleMount} />
           </div>
-          <div className='iframe-zone' style={{  width: '100%', height: '100%', }}>
-            {/* <Box direction='w'> */}
-              <iframe
-                style={{ backgroundColor: "white"}}
-                height='100%'
-                width='100%'
-                ref={iframe}
-                title='code-result' 
-                sandbox='allow-scripts'
-                srcDoc={baseHTML}
-              />
-            {/* </Box> */}
+          <div className='iframe-zone'>
+            <iframe
+              style={{ backgroundColor: "white"}}
+              height='100%'
+              width='100%'
+              ref={iframe}
+              title='code-result' 
+              sandbox='allow-scripts'
+              srcDoc={baseHTML}
+            />
           </div>
         </div>
       </Box>
-      <div style={{ display: 'relative' }}>
+      <div className='compile-button'>
         <button className='button is-primary' onClick={handleTranspileClick}>Run!</button>
       </div>
     </div>

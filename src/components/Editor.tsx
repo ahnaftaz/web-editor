@@ -10,7 +10,7 @@ const Editor = ({ onChange, onMount }: Properties) => {
     <MonacoEditor
       theme='vs-dark'
       height='100%'
-      width='calc(100% - 13px)'
+      width='100%'
       defaultLanguage='javascript'
       defaultValue='/* Use "print()" to show items in the result widow */'
       options={{

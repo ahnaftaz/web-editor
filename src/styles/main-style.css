@@ -1,0 +1,33 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-title {
+  margin: 10px;
+}
+
+.main-content-area {
+  height: 100%;
+  display: flex;
+}
+
+.editor-area {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.iframe-zone {
+  width: 100%;
+  height: 100%;
+}
+
+.compile-button {
+  display: relative;
+}
+
+.iframe {
+  background-color: white;
+}
