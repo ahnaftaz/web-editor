@@ -1,33 +1,16 @@
-import * as esbuild from 'esbuild-wasm';
-import { useState, useEffect, useRef } from 'react';
+// import * as esbuild from 'esbuild-wasm';
+import { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { pathResolvePlugin } from './plugins/path-resolution-plugin';
-import { moduleRequestPlugin } from './plugins/module-request-plugin';
+// import { pathResolvePlugin } from './plugins/path-resolution-plugin';
+// import { moduleRequestPlugin } from './plugins/module-request-plugin';
 import MonacoEditor, { OnChange, OnMount } from '@monaco-editor/react';
 import baseHTML from './components/base-output';
 import 'bulmaswatch/cyborg/bulmaswatch.min.css';
+import transpile from './transpiler';
 
 const App = () => {
   const iframe = useRef<HTMLIFrameElement>(null);
-  // const highlighter = useRef<any>(null);
-  const [mainBuildService, setBuildService] = useState<esbuild.Service>();
   const [input, setInput] = useState('');
-
-  // Prepares app for processing transpile requests
-  useEffect(() => {
-    startService();
-  }, []);
-
-  // async start of webapp and assign to ref to avoid restarts
-  const startService = async () => {
-    // esbuild binary (web assembly) located in public folder
-    // of app to run directly on browser
-    const service = await esbuild.startService({
-      worker: true,
-      wasmURL: 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm',
-    });
-    setBuildService(service);
-  };
 
   const handleEditorChange: OnChange = (value) => {
     if (!value) {
@@ -40,26 +23,17 @@ const App = () => {
   };
 
   // Assigned to button to send a service req to esbuild
-  const initiateTranspiling = async () => {
-    if (!mainBuildService || !iframe.current || !iframe.current.contentWindow) {
+  const handleTranspileClick = async () => {
+    if (!iframe.current || !iframe.current.contentWindow) {
       return;
     }
 
     // reset the iframe window before each code run to remove any changes to page
     iframe.current.srcdoc = baseHTML;
 
-    // begin building file with all modules using custom plugins
-    const result = await mainBuildService.build({
-      entryPoints: ['index.js'],
-      bundle: true,
-      write: false,
-      // plugin to handle path resolution and api request
-      plugins: [pathResolvePlugin(), moduleRequestPlugin(input)],
-      define: { 'process.env.NODE_ENV': '"production"' },
-    });
-
+    const transpiledCode = await transpile(input);
     // communicating all code through messages to maintain no relation between parent child
-    iframe.current.contentWindow.postMessage(result.outputFiles[0].text, '*');
+    iframe.current.contentWindow.postMessage(transpiledCode, '*');
   };
 
   return (
@@ -82,7 +56,7 @@ const App = () => {
           onChange={handleEditorChange}
           onMount={handleMount}
         />
-        <button className='button is-primary' onClick={initiateTranspiling}>
+        <button className='button is-primary' onClick={handleTranspileClick}>
           Transpile!
         </button>
       </div>
