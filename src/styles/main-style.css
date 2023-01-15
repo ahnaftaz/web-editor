@@ -10,24 +10,19 @@
 .main-content-area {
   height: 100%;
   display: flex;
+  flex: 1;
 }
 
 .editor-area {
   height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  width: 50%;
 }
 
 .iframe-zone {
-  width: 100%;
+  width: 50%;
   height: 100%;
 }
 
 .compile-button {
   display: relative;
-}
-
-.iframe {
-  background-color: white;
 }

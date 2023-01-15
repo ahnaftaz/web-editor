@@ -50,7 +50,7 @@ const App = () => {
           </div>
           <div className='iframe-zone'>
             <iframe
-              style={{ backgroundColor: "white"}}
+              style={{ backgroundColor: "white" }}
               height='100%'
               width='100%'
               ref={iframe}
