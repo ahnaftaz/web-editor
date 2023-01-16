@@ -12,7 +12,7 @@ const Editor = ({ onChange, onMount }: Properties) => {
       height='100%'
       width='100%'
       defaultLanguage='javascript'
-      defaultValue='// Edit DOM to display content in preview box! (print() coming soon)'
+      defaultValue='// Use print() to show any content in preview window!'
       options={{
         wordWrap: 'on',
         minimap: { enabled: false },

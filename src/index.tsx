@@ -4,14 +4,13 @@ import { OnChange, OnMount } from '@monaco-editor/react';
 import baseHTML from './components/base-output';
 import 'bulmaswatch/darkly/bulmaswatch.min.css';
 import './styles/main-style.css';
-import transpile from './transpiler';
+import makeExecutionCode from './components/execution-code';
 import Box from './components/Box';
 import Editor from './components/Editor';
 
 const App = () => {
   const iframe = useRef<HTMLIFrameElement>(null);
   const [input, setInput] = useState('');
-
   const handleEditorChange: OnChange = (value) => {
     if (!value) {
       return;
@@ -31,8 +30,9 @@ const App = () => {
     // reset the iframe window before each code run to remove any changes to page
     iframe.current.srcdoc = baseHTML;
 
-    const transpiledCode = await transpile(input);
-    // communicating all code through messages to maintain no relation between parent child
+    const transpiledCode = await makeExecutionCode(input);
+
+    // communicate only through messages so no relation between parent/ child window
     iframe.current.contentWindow.postMessage(transpiledCode, '*');
   };
 
