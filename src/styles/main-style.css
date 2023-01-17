@@ -6,6 +6,9 @@
 .main-title {
   margin-top: 10px;
   margin-left: 10px;
+  animation: fadeInAnimation ease 3s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
 }
 
 .intro-header {
@@ -22,13 +25,49 @@
 .editor-area {
   height: 100%;
   width: 50%;
+  animation: slide-in 0.5s ease-in-out;
+  animation-fill-mode: forwards;
 }
 
 .iframe-zone {
   width: 50%;
   height: 100%;
+  animation: slide-in-left 0.5s ease-in-out;
+  animation-fill-mode: forwards;
 }
 
 .compile-button {
   display: relative;
+}
+
+.button {
+  animation: slide-in 0.5s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+   }
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slide-in-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
 }
