@@ -17,6 +17,7 @@ const transpile = async (input: string) => {
     entryPoints: ['index.js'],
     bundle: true,
     write: false,
+    target: 'es2015',
     // plugin to handle path resolution and api request
     plugins: [pathResolvePlugin(), moduleRequestPlugin(input)],
     define: { 'process.env.NODE_ENV': '"production"' },

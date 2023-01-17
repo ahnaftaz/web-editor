@@ -4,7 +4,13 @@
 }
 
 .main-title {
-  margin: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.intro-header {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .main-content-area {

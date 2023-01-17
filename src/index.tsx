@@ -39,9 +39,19 @@ const App = () => {
   return (
     <div className='main-container'>
       <div className='main-header'>
-        <h1 className='title is-3 main-title'>
-          Online JS Editor
-        </h1>
+        {/* <div>    this will be a div for making the language selector*/}
+          <h1 className='title is-2 main-title'>
+            Online JS Editor
+          </h1>
+        {/* </div> */}
+        <div className='intro-header'>
+          Welcome to a simple online code editor! You can test all sorts of code in this
+          isolated environment and test how individual components of your code may function!
+          This is totally useful! Totally not a pet project!!
+        </div>
+        <div className='intro-header'>
+          You can use the 'print()' function to display items in the preview window
+        </div>
       </div>
       <Box direction='s'>
         <div className='main-content-area'>
