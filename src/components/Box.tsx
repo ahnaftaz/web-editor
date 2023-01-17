@@ -11,7 +11,7 @@ const Box = ({ direction, children }: BoxProps) => {
 
   if (direction === 's') {
     resiseableProps = {
-      maxConstraints: [Infinity, window.innerHeight * 0.8],
+      maxConstraints: [Infinity, window.innerHeight * 0.7],
       height: window.innerHeight * 0.5,
       width: Infinity,
       resizeHandles: [direction],
