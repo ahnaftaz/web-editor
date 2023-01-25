@@ -19,6 +19,7 @@ const App = () => {
   };
   const handleMount: OnMount = (monaco) => {
     monaco.getModel()?.updateOptions({ tabSize: 2 });
+    handleTranspileClick();
   };
 
   // Assigned to button to send a service req to esbuild
